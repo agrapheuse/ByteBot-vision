@@ -1,0 +1,17 @@
+[0.534s] Invoking command in '/home/parallels/vision_ws/build/vision_controller': PYTHONPATH=/home/parallels/vision_ws/build/vision_controller/prefix_override:/home/parallels/vision_ws/install/vision_controller/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/parallels/vision_ws/build/vision_controller/build --no-deps install_data
+[0.710s] running develop
+[0.823s] running egg_info
+[0.824s] writing vision_controller.egg-info/PKG-INFO
+[0.824s] writing dependency_links to vision_controller.egg-info/dependency_links.txt
+[0.825s] writing entry points to vision_controller.egg-info/entry_points.txt
+[0.826s] writing requirements to vision_controller.egg-info/requires.txt
+[0.827s] writing top-level names to vision_controller.egg-info/top_level.txt
+[0.828s] reading manifest file 'vision_controller.egg-info/SOURCES.txt'
+[0.829s] writing manifest file 'vision_controller.egg-info/SOURCES.txt'
+[0.831s] running build_ext
+[0.831s] Creating /home/parallels/vision_ws/install/vision_controller/lib/python3.10/site-packages/vision-controller.egg-link (link to .)
+[0.833s] Installing get_image_from_oakd script to /home/parallels/vision_ws/install/vision_controller/lib/vision_controller
+[0.834s] 
+[0.834s] Installed /home/parallels/vision_ws/build/vision_controller
+[0.834s] running install_data
+[0.855s] Invoked command in '/home/parallels/vision_ws/build/vision_controller' returned '0': PYTHONPATH=/home/parallels/vision_ws/build/vision_controller/prefix_override:/home/parallels/vision_ws/install/vision_controller/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/parallels/vision_ws/build/vision_controller/build --no-deps install_data

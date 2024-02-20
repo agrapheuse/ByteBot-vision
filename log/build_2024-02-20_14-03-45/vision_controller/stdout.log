@@ -1,0 +1,16 @@
+running develop
+running egg_info
+writing vision_controller.egg-info/PKG-INFO
+writing dependency_links to vision_controller.egg-info/dependency_links.txt
+writing entry points to vision_controller.egg-info/entry_points.txt
+writing requirements to vision_controller.egg-info/requires.txt
+writing top-level names to vision_controller.egg-info/top_level.txt
+reading manifest file 'vision_controller.egg-info/SOURCES.txt'
+writing manifest file 'vision_controller.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/parallels/vision_ws/install/vision_controller/lib/python3.10/site-packages/vision-controller.egg-link (link to .)
+Installing get_image_from_oakd script to /home/parallels/vision_ws/install/vision_controller/lib/vision_controller
+
+Installed /home/parallels/vision_ws/build/vision_controller
+running install_data
+copying package.xml -> /home/parallels/vision_ws/install/vision_controller/share/vision_controller

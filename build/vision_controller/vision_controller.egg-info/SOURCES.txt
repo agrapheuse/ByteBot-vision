@@ -1,0 +1,13 @@
+package.xml
+setup.cfg
+setup.py
+resource/vision_controller
+vision_controller/__init__.py
+vision_controller/get_image_from_oakd.py
+vision_controller.egg-info/PKG-INFO
+vision_controller.egg-info/SOURCES.txt
+vision_controller.egg-info/dependency_links.txt
+vision_controller.egg-info/entry_points.txt
+vision_controller.egg-info/requires.txt
+vision_controller.egg-info/top_level.txt
+vision_controller.egg-info/zip-safe
