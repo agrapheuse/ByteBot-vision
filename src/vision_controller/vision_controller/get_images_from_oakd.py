@@ -7,10 +7,10 @@ import os
 import cv2
 
 
-class GetImageFromOakdNode(Node):
+class GetImagesFromOakdNode(Node):
     
     def __init__(self):
-        super().__init__("get_image_from_oakd")
+        super().__init__("get_images_from_oakd")
         self.image_raw_subscriber_ = self.create_subscription(
             msg_type=Image,
             topic="/oakd/rgb/preview/image_raw",
@@ -41,15 +41,13 @@ class GetImageFromOakdNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = GetImageFromOakdNode()
+    node = GetImagesFromOakdNode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
     finally:
         # Destroy the node explicitly
-        # (optional - otherwise it will be done automatically
-        # when the garbage collector destroys the node object)
         node.destroy_node()
         rclpy.shutdown()
 
