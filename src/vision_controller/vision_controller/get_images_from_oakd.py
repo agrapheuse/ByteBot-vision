@@ -50,7 +50,3 @@ def main(args=None):
         # Destroy the node explicitly
         node.destroy_node()
         rclpy.shutdown()
-
-
-if __name__ == "__main__":
-    main()
