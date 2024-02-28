@@ -1,3 +1,0 @@
-[console_scripts]
-get_image_from_oakd = vision_controller.get_image_from_oakd:main
-

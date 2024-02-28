@@ -1,1 +1,0 @@
-/home/parallels/vision_ws/src/vision_controller/setup.py
