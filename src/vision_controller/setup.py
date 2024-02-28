@@ -20,7 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'get_images_from_oakd = vision_controller.get_images_from_oakd:main'
+            'get_images_from_oakd = vision_controller.get_images_from_oakd:main',
+			'follow_person = vision_controller.follow_person:main',
+			'detect_colour = vision_controller.detect_colour:main'
         ],
     },
 )
