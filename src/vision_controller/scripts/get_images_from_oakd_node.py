@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
-from vision_controller.vision_controller.nodes.get_images_from_oakd import GetImagesFromOakdNode
+from vision_controller.nodes.get_images_from_oakd import GetImagesFromOakdNode
 
 def main(args=None):
     rclpy.init(args=args)

@@ -15,19 +15,22 @@ from ament_index_python.packages import get_package_share_directory
 import numpy as np
 
 import os
+import json
 from sensor_msgs.msg import Image
+from std_msgs.msg import String
 
 class DetectBodyNode(Node):
     def __init__(self):
         super().__init__("detect_body")
 
         self.buffer = 0
-        self.id=0
+        self.state = None
 
         self.cv_bridge = CvBridge()
 
         self.package_share_directory = get_package_share_directory('vision_controller')
         model_path = os.path.join(self.package_share_directory, 'model', 'pose_landmarker_heavy.task')
+        self.state_path = os.path.join(self.package_share_directory, 'state', 'state.json')
 
         # STEP 2: Create an GestureRecognizer object.
         base_options = python.BaseOptions(model_asset_path=model_path)
@@ -36,12 +39,11 @@ class DetectBodyNode(Node):
             output_segmentation_masks=True)
         self.detector = vision.PoseLandmarker.create_from_options(options)
 
-        self.image_raw_subscriber_ = self.create_subscription(
-			msg_type=Image,
-			topic="/oakd/rgb/preview/image_raw",
-			callback=self.image_raw_callback,
-			qos_profile=10
-        )
+        self.image_raw_subscriber_ = self.create_subscription(Image, "/oakd/rgb/preview/image_raw", self.image_raw_callback, 1)
+        self.get_logger().info('listening on the image topic...')
+        self.image_raw_subscriber_
+
+        self.vision_publisher = self.create_publisher(String, "/vision_topic", 10)
 
     def draw_landmarks_on_image(self, rgb_image, detection_result):
         pose_landmarks_list = detection_result.pose_landmarks
@@ -78,22 +80,35 @@ class DetectBodyNode(Node):
             # STEP 4: Detect pose landmarks from the input image.
             detection_result = self.detector.detect(loaded_image)
 
-            if not detection_result.pose_landmarks:
-                self.get_logger().info("No body detected")
-            else:
-                self.get_logger().info("Body detected")
+            with open(self.state_path, 'r') as file:
+                self.state = json.load(file)
 
-                annotated_image = self.draw_landmarks_on_image(loaded_image.numpy_view(), detection_result)
+            if self.state == "patrolling":
+                if not detection_result.pose_landmarks:
+                    self.get_logger().info("No body detected")
+                else:
+                    # annotated_image = self.draw_landmarks_on_image(loaded_image.numpy_view(), detection_result)
 
-                # img_path = os.path.join(self.package_share_directory, 'tmp_img', 'tmp.jpg')
-                # cv2.imwrite(img_path, annotated_image)  # Save as JPEG
+                    # img_path = os.path.join(self.package_share_directory, 'tmp_img', 'tmp.jpg')
+                    # cv2.imwrite(img_path, annotated_image)  # Save as JPEG
 
-                minimum = min(detection_result.pose_landmarks[0], key=lambda x: x.y).y
-                maximum = max(detection_result.pose_landmarks[0], key=lambda x: x.y).y
-                landmark_range = abs(minimum - maximum)
+                    minimum = min(detection_result.pose_landmarks[0], key=lambda x: x.y).y
+                    maximum = max(detection_result.pose_landmarks[0], key=lambda x: x.y).y
+                    landmark_range = abs(minimum - maximum)
 
-                if landmark_range <= 0.4:
-                    self.get_logger().info("lying body detected")
+                    if landmark_range <= 0.5:
+                        msg = String()
+                        msg.data = "lying body detected"
+                        self.vision_publisher.publish(msg)
+
+                        self.get_logger().info("lying body detected")
+
+                    else:
+                        msg = String()
+                        msg.data = "body detected"
+                        self.vision_publisher.publish(msg)
+
+                        self.get_logger().info("Body detected")
 
             self.buffer = 0
         else:

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import rclpy
-from vision_controller.nodes.detect_colour import DetectColourNode
+from vision_controller.nodes.change_state import ChangeStateNode
 
 def main(args=None):
     rclpy.init(args=args)
-    node = DetectColourNode()
+    node = ChangeStateNode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

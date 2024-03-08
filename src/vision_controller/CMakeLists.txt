@@ -21,6 +21,7 @@ install(PROGRAMS
   scripts/follow_person_node.py
   scripts/get_images_from_oakd_node.py
   scripts/detect_body_node.py
+  scripts/change_state_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -33,6 +34,12 @@ install(DIRECTORY
 # Install the temporary pictures
 install(DIRECTORY
   vision_controller/tmp_img
+  DESTINATION share/${PROJECT_NAME}
+)
+
+# Install the state json file
+install(DIRECTORY
+  vision_controller/state
   DESTINATION share/${PROJECT_NAME}
 )
 
