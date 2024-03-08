@@ -27,7 +27,9 @@ class FollowLegsNode(Node):
             )
         self.get_logger().info("FollowLegsNode has been created")
         # if no legs have been detected for a few seconds, send a log message
-        self.no_legs_detected_timer = self.create_timer(5.0, self.no_legs_detected_callback)
+        self.no_legs_detected_timer = self.create_timer(
+            5.0, self.no_legs_detected_callback
+        )
 
     def no_legs_detected_callback(self):
         self.get_logger().info("No legs detected for 5 seconds")
@@ -48,17 +50,37 @@ class FollowLegsNode(Node):
             )
 
             if len(legs) > 0:
-                self.get_logger().info(f"Detected {len(legs)} leg(s)")
+                self.get_logger().info(f"Detected {len(legs)} legs")
+                # Reset the timer each time legs are detected
                 self.reset_no_legs_detected_timer()
-                x, y, w, h = legs[0]  # assuming the first detected part is the target
-                center_x, center_y = x + w // 2, y + h // 2
+                x, y, w, h = legs[0]  # Assuming the first detected part is the target
+                center_x = x + w // 2
+
+                # Image frame dimensions (assuming these or get from camera info)
+                frame_width = cv_image.shape[1]
+                frame_height = cv_image.shape[0]
+
+                # Calculate the error between the center of the detected legs and the center of the image
+                error_x = center_x - frame_width / 2
+
+                # Control parameters
+                linear_speed = 0.5  # Constant linear speed
+                angular_speed_factor = 0.005  # Adjust based on your needs
+
                 twist = Twist()
-                # update twist.linear.x, twist.angular.z based on center_x to move the Turtlebot
-                if center_x < 100:
-                    twist.angular.z = 0.5
-                elif center_x > 180:
-                    twist.angular.z = -0.5
-                twist.linear.x = 0.2
+                twist.linear.x = float(
+                    linear_speed * (1 - abs(error_x) / (frame_width / 2))
+                )  # Slow down as the error increases
+                twist.angular.z = float(
+                    -error_x * angular_speed_factor
+                )  # Turn rate proportional to error_x
+
+                # Safety measure to stop if too close (adjust 100 based on your scenario)
+                if w * h > (frame_width * frame_height / 4):
+                    twist.linear.x = (
+                        0.0  # Stop if the detected legs are too large/close
+                    )
+
                 self.publisher_.publish(twist)
                 self.get_logger().debug("Published a twist message")
         except CvBridgeError as e:
