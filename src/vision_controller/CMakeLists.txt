@@ -18,6 +18,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/detect_colour_node.py
   scripts/detect_hand_gestures_im_raw_node.py
+  scripts/follow_legs_node.py
   scripts/follow_person_node.py
   scripts/get_images_from_oakd_node.py
   scripts/detect_body_node.py

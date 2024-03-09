@@ -3,6 +3,7 @@
 import rclpy
 from vision_controller.nodes.get_images_from_oakd import GetImagesFromOakdNode
 
+
 def main(args=None):
     rclpy.init(args=args)
     node = GetImagesFromOakdNode()
@@ -14,6 +15,7 @@ def main(args=None):
         # Destroy the node explicitly
         node.destroy_node()
         rclpy.shutdown()
+
 
 if __name__ == "__main__":
     main()

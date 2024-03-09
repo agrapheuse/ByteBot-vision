@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import rclpy
-from vision_controller.nodes.detect_colour import DetectColourNode
+from vision_controller.nodes.follow_legs import FollowLegsNode
 
 
 def main(args=None):
     rclpy.init(args=args)
-    node = DetectColourNode()
+    node = FollowLegsNode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
