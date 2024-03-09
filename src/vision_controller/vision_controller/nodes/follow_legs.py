@@ -18,7 +18,7 @@ class FollowLegsNode(Node):
         )
         self.publisher_ = self.create_publisher(Twist, "/cmd_vel", 10)
         self.cv_bridge = CvBridge()
-        haar_cascade_path = "/home/parallels/vision_ws/haarcascade_lowerbody.xml"
+        haar_cascade_path = "/home/parallels/projects/vision_ws/haarcascade_lowerbody.xml"
         self.lower_body_cascade = cv2.CascadeClassifier(haar_cascade_path)
         # if the file is not found, raise an error
         if self.lower_body_cascade.empty():
