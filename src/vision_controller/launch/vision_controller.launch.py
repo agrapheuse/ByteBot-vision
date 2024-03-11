@@ -27,11 +27,6 @@ def generate_launch_description():
         ),
         Node(
             package='vision_controller',
-            executable='detect_head_node.py',
-            name='detect_head',
-        ),
-        Node(
-            package='vision_controller',
             executable='follow_person_node.py',
             name='follow_person',
         )
