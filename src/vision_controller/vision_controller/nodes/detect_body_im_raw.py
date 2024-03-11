@@ -43,7 +43,8 @@ class DetectBodyNode(Node):
         self.get_logger().info('listening on the image topic...')
         self.image_raw_subscriber_
 
-        self.vision_publisher = self.create_publisher(String, "/vision_topic", 10)
+        self.llm_publisher = self.create_publisher(String, "/llm_vision_topic", 10)
+        self.vision_publisher = self.create_publisher(String, "/pose_listener", 10)
 
     def draw_landmarks_on_image(self, rgb_image, detection_result):
         pose_landmarks_list = detection_result.pose_landmarks
@@ -98,17 +99,23 @@ class DetectBodyNode(Node):
 
                     if landmark_range <= 0.5:
                         msg = String()
-                        msg.data = "lying body detected"
+                        msg.data = "stop"
                         self.vision_publisher.publish(msg)
 
                         self.get_logger().info("lying body detected")
 
+                        msg.data = "lying body detected"
+                        self.llm_publisher.publish(msg)
+
                     else:
                         msg = String()
-                        msg.data = "body detected"
+                        msg.data = "stop"
                         self.vision_publisher.publish(msg)
 
                         self.get_logger().info("Body detected")
+
+                        msg.data = "body detected"
+                        self.llm_publisher.publish(msg)
 
             self.buffer = 0
         else:
