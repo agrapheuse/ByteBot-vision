@@ -72,7 +72,7 @@ class DetectBodyNode(Node):
             self.get_logger().debug("image_raw_callback has been called!")
 
             cv_image = self.cv_bridge.imgmsg_to_cv2(image, "bgr8")  # Convert to OpenCV format
-            img_path = os.path.join(self.package_share_directory, 'tmp_img', 'tmp.jpg')
+            img_path = "/tmp/tmp.jpg"
             cv2.imwrite(img_path, cv_image)  # Save as JPEG
 
             # STEP 3: Load the input image.
