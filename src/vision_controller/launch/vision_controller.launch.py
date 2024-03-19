@@ -14,20 +14,10 @@ def generate_launch_description():
             package='vision_controller',
             executable='detect_body_node.py',
             name='detect_body',
-        ),
-        Node(
-            package='vision_controller',
-            executable='detect_colour_node.py',
-            name='detect_colour',
-        ),
-        Node(
-            package='vision_controller',
-            executable='detect_hand_gestures_im_raw_node.py',
-            name='detect_hand_gestures',
-        ),
-        Node(
-            package='vision_controller',
-            executable='follow_person_node.py',
-            name='follow_person',
         )
+        # Node(
+        #     package='vision_controller',
+        #     executable='follow_person_node.py',
+        #     name='follow_person',
+        # )
     ])
