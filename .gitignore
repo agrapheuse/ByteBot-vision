@@ -94,3 +94,4 @@ AMENT_IGNORE
 *.png
 *.jpg
 convert_image.py
+src/vision_controller/vision_controller/tmp_img/
