@@ -72,7 +72,7 @@ class FollowLegsNode(Node):
                     linear_speed * (1 - abs(error_x) / (frame_width / 2))
                 )  # Slow down as the error increases
                 twist.angular.z = float(
-                    -error_x * angular_speed_factor
+                    error_x * angular_speed_factor
                 )  # Turn rate proportional to error_x
 
                 # Safety measure to stop if too close (adjust 100 based on your scenario)

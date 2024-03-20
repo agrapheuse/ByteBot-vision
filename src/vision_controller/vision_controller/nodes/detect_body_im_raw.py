@@ -16,6 +16,7 @@ import numpy as np
 
 import os
 import json
+import time
 from sensor_msgs.msg import Image
 from std_msgs.msg import String
 
@@ -43,7 +44,8 @@ class DetectBodyNode(Node):
         self.get_logger().info('listening on the image topic...')
         self.image_raw_subscriber_
 
-        self.vision_publisher = self.create_publisher(String, "/vision_topic", 10)
+        self.llm_publisher = self.create_publisher(String, "/llm_plan", 10)
+        self.vision_publisher = self.create_publisher(String, "/pose_listener", 10)
 
     def draw_landmarks_on_image(self, rgb_image, detection_result):
         pose_landmarks_list = detection_result.pose_landmarks
@@ -71,7 +73,7 @@ class DetectBodyNode(Node):
             self.get_logger().debug("image_raw_callback has been called!")
 
             cv_image = self.cv_bridge.imgmsg_to_cv2(image, "bgr8")  # Convert to OpenCV format
-            img_path = os.path.join(self.package_share_directory, 'tmp_img', 'tmp.jpg')
+            img_path = "/tmp/tmp.jpg"
             cv2.imwrite(img_path, cv_image)  # Save as JPEG
 
             # STEP 3: Load the input image.
@@ -83,33 +85,41 @@ class DetectBodyNode(Node):
             with open(self.state_path, 'r') as file:
                 self.state = json.load(file)
 
-            if self.state == "patrolling":
-                if not detection_result.pose_landmarks:
-                    self.get_logger().info("No body detected")
+            if detection_result.pose_landmarks:
+                minimum_height = min(detection_result.pose_landmarks[0], key=lambda x: x.y).y
+                maximum_height = max(detection_result.pose_landmarks[0], key=lambda x: x.y).y
+                landmark_range_height = abs(minimum_height - maximum_height)
+
+                minimum_width = min(detection_result.pose_landmarks[0], key=lambda x: x.x).x
+                maximum_width = max(detection_result.pose_landmarks[0], key=lambda x: x.x).x
+                landmark_range_width = abs(minimum_width - maximum_width)
+
+                if landmark_range_width >= 1.5*landmark_range_height and landmark_range_height <= 0.4:
+                    msg = String()
+                    msg.data = "stop"
+                    self.vision_publisher.publish(msg)
+
+                    self.get_logger().info("lying body detected")
+
+                    msg.data = "{\"plan\":[\"ask if the person is okay and wait 10 seconds. If the person doesn't respond, call emergencies\"]}"
+                    self.llm_publisher.publish(msg)
+                    time.sleep(20)
                 else:
-                    # annotated_image = self.draw_landmarks_on_image(loaded_image.numpy_view(), detection_result)
+                    if self.state == "patrolling":
+                        # annotated_image = self.draw_landmarks_on_image(loaded_image.numpy_view(), detection_result)
 
-                    # img_path = os.path.join(self.package_share_directory, 'tmp_img', 'tmp.jpg')
-                    # cv2.imwrite(img_path, annotated_image)  # Save as JPEG
+                        # img_path = os.path.join(self.package_share_directory, 'tmp_img', 'tmp.jpg')
+                        # cv2.imwrite(img_path, annotated_image)  # Save as JPEG
 
-                    minimum = min(detection_result.pose_landmarks[0], key=lambda x: x.y).y
-                    maximum = max(detection_result.pose_landmarks[0], key=lambda x: x.y).y
-                    landmark_range = abs(minimum - maximum)
-
-                    if landmark_range <= 0.5:
                         msg = String()
-                        msg.data = "lying body detected"
-                        self.vision_publisher.publish(msg)
-
-                        self.get_logger().info("lying body detected")
-
-                    else:
-                        msg = String()
-                        msg.data = "body detected"
+                        msg.data = "stop"
                         self.vision_publisher.publish(msg)
 
                         self.get_logger().info("Body detected")
 
+                        msg.data = "{\"plan\":[\"ask the person their identity and what they are doing here\"]}"
+                        self.llm_publisher.publish(msg)
+                        time.sleep(20)
             self.buffer = 0
         else:
             self.buffer += 1
