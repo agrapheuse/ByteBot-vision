@@ -89,3 +89,8 @@ AMENT_IGNORE
 
 # VS Code
 .vscode/
+
+.venv/
+*.png
+*.jpg
+convert_image.py
