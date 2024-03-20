@@ -1,0 +1,2 @@
+This is a file needed for Gitlab to have the tmp_img folder.
+Please do not remove.
