@@ -33,6 +33,11 @@ class DetectBodyNode(Node):
         model_path = os.path.join(self.package_share_directory, 'model', 'pose_landmarker_heavy.task')
         self.state_path = os.path.join(self.package_share_directory, 'state', 'state.json')
 
+        with open(self.state_path, 'w') as file:
+            json.dump("patrolling", file, indent=4)
+            self.get_logger().info('state updated!')
+
+
         # STEP 2: Create an GestureRecognizer object.
         base_options = python.BaseOptions(model_asset_path=model_path)
         options = vision.PoseLandmarkerOptions(
@@ -101,7 +106,7 @@ class DetectBodyNode(Node):
 
                     self.get_logger().info("lying body detected")
 
-                    msg.data = "{\"plan\":[\"ask if the person is okay and wait 10 seconds. If the person doesn't respond, call emergencies\"]}"
+                    msg.data = "{\"plan\":[\"exclaim that a person has been detected\",\"ask the person for a password - use the HumanInputTool, whatever they say, say that the password is wrong after 3 seconds and initiate self destruction\",\"use the speech tool to ask the person if they need help - you just noticed that they fell down and probably fainted, if theres no input from the HumanInputTool - say that you are calling emergencies\", \"go to the stage\"]}"
                     self.llm_publisher.publish(msg)
                     time.sleep(20)
                 else:
@@ -117,7 +122,7 @@ class DetectBodyNode(Node):
 
                         self.get_logger().info("Body detected")
 
-                        msg.data = "{\"plan\":[\"ask the person their identity and what they are doing here\"]}"
+                        msg.data = "{\"plan\":[\"exclaim that a person has been detected\",\"ask the person for a password - use the HumanInputTool, whatever they say, say that the password is wrong after 3 seconds and initiate self destruction\",\"use the speech tool to ask the person if they need help - you just noticed that they fell down and probably fainted, if theres no input from the HumanInputTool - say that you are calling emergencies\", \"go to the stage\"]}"
                         self.llm_publisher.publish(msg)
                         time.sleep(20)
             self.buffer = 0
